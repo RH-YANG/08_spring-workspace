@@ -328,9 +328,39 @@ public class MemberController {
 			session.setAttribute("alertMsg", "비밀번호를 잘못 입력하셨습니다. 확인해주세요.");
 			return "redirect:myPage.me";
 		}
-		
-		
 	}
+	
+	
+	@RequestMapping("updatePwd.me")
+	public String updatePwd(Member m, String updatePwd, HttpSession session, Model model) {
+		//1_1) 사용자가 입력한 현재 비밀번호가 로그인한 회원의 비밀번호와 일치할 경우
+		String originPwd = ((Member)session.getAttribute("loginUser")).getUserPwd();
+		if( bcryptPasswordEncoder.matches(m.getUserPwd(), originPwd)) {
+			//비밀번호 변경용 서비스 실행
+			updatePwd = bcryptPasswordEncoder.encode(updatePwd);
+			m.setUserPwd(updatePwd);
+			int result = mService.updatePwd(m);
+            
+			if(result > 0) {//> 변경 성공 시
+				//갱신된 회원 객체 조회해서 session에 덮어씌우기
+				Member updateMem = mService.loginMember(m);
+				session.setAttribute("loginUser", updateMem);
+				
+				//마이페이지가 보여질 수 있도록 처리 (이때 alert로 성공 알림)
+				session.setAttribute("alertMsg", "성공적으로 비밀번호를 변경하였습니다.");
+		    	return "redirect:myPage.me";
+			}else {//> 변경 실패 시
+				//마이페이지가 보여질 수 있도록 처리 (이때 alert로 실패 알림)
+				session.setAttribute("alertMsg", "비밀번호 변경에 실패하였습니다.");
+		    	return "redirect:myPage.me";
+			}
+	    }else {//1_2) 사용자가 입력한 현재 비밀번호가 로그인한 회원의 비밀번호와 일치하지 않을 경우
+	    	//> 마이페이지가 보여질 수 있도록 처리 (이때 alert로 비번 틀림 알림)
+	    	session.setAttribute("alertMsg", "입력한 비밀번호가 회원 비밀번호와 일치하지 않습니다.");
+	    	return "redirect:myPage.me";
+	    }
+	}
+	
 	
 	
 	

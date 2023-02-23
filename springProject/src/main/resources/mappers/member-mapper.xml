@@ -85,6 +85,13 @@
 		 where user_id = #{userId}
 	</update>
 	
+	<update id="updatePwd">
+		update
+		       member
+		   set user_pwd = #{userPwd}
+		 where user_id = #{userId}  
+	</update>
+	
 	
 
 </mapper>

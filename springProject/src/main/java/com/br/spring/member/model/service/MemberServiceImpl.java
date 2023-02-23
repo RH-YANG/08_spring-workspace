@@ -37,10 +37,17 @@ public class MemberServiceImpl implements MemberService {
 	public int deleteMember(String userId) {
 		return mDao.deleteMember(sqlSession, userId);
 	}
+	
+	@Override
+	public int updatePwd(Member m) {
+		return mDao.updatePwd(sqlSession, m);
+	}
 
 	@Override
 	public int idCheck(String checkId) {
 		return 0;
 	}
+
+	
 
 }
