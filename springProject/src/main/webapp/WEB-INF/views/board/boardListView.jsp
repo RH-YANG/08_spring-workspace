@@ -57,7 +57,7 @@
                 <tbody>
                 	<c:forEach var="b" items="${list}">
 	                    <tr>
-	                        <td>${b.boardNo}</td>
+	                        <td class="bno">${b.boardNo}</td>
 	                        <td>${b.boardTitle}</td>
 	                        <td>${b.boardWriter}</td>
 	                        <td>${b.count}</td>
@@ -71,6 +71,15 @@
 					</c:forEach>
                 </tbody>
             </table>
+            
+            <script>
+            	$(function(){
+            		$("#boardList>tbody>tr").click(function(){
+            			location.href='detail.bo?no='+$(this).children(".bno").text();
+            		});
+            	})
+            </script>
+            
             <br>
 
             <div id="pagingArea">

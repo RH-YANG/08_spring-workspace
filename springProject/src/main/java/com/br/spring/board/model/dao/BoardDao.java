@@ -21,5 +21,24 @@ public class BoardDao {
 		int limit = pi.getBoardLimit();
 		return (ArrayList)sqlSession.selectList("boardMapper.selectList", null, new RowBounds(offset, limit));
 	}
+	
+	public int insertBoard(SqlSessionTemplate sqlSession, Board b) {
+		return sqlSession.insert("boardMapper.insertBoard", b);
+	}
+	
+	public int increseCount(SqlSessionTemplate sqlSession, int boardNo) {
+		return sqlSession.update("boardMapper.increseCount", boardNo);
+	}
+	
+	public Board selectBoard(SqlSessionTemplate sqlSession, int boardNo) {
+		return sqlSession.selectOne("boardMapper.selectBoard", boardNo);
+	}
+	
+	public int deleteBoard(SqlSessionTemplate sqlSession, int boardNo) {
+		return sqlSession.update("boardMapper.deleteBoard", boardNo);
+	}
 
+	public int updateBoard(SqlSessionTemplate sqlSession, Board b) {
+		return sqlSession.update("boardMapper.updateBoard", b);
+	}
 }
