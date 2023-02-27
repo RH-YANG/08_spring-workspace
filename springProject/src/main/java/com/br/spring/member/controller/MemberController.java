@@ -1,5 +1,7 @@
 package com.br.spring.member.controller;
 
+import java.io.File;
+
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,8 +9,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.br.spring.common.template.FileUpload;
 import com.br.spring.member.model.service.MemberService;
 import com.br.spring.member.model.vo.Member;
 
@@ -359,6 +364,37 @@ public class MemberController {
 	    	session.setAttribute("alertMsg", "입력한 비밀번호가 회원 비밀번호와 일치하지 않습니다.");
 	    	return "redirect:myPage.me";
 	    }
+	}
+	
+	@ResponseBody
+	@RequestMapping("idCheck.me")
+	public String ajaxIdCheck(String checkId){
+		int count = mService.idCheck(checkId);
+		System.out.println(count);
+		return count>0 ? "NNNNN" : "NNNNY";
+	}
+	
+	@ResponseBody
+	@RequestMapping("uploadProfile.me")
+	public void uploadProfileImg(MultipartFile uploadFile, Member m, 
+			                     String originalFile, HttpSession session){
+		if(uploadFile != null) {
+			//만들어둔 static메소드 활용해 파일업로드
+			String saveFilePath = FileUpload.saveFile(uploadFile, session, "resources/profile_images/"); 
+			//데이터담아 조회 보내기
+			m.setProfileImg(saveFilePath);
+			int result = mService.updateProfileImg(m);
+			
+			if(result>0) {
+				if(!originalFile.equals("")) {
+					//기존파일이 있는경우 파일삭제도 진행해주어야한다.
+					new File(session.getServletContext().getRealPath(originalFile)).delete();
+				}
+				//업데이트된 로그인정보 담기
+				session.setAttribute("loginUser", mService.loginMember(m));
+			}
+			
+		}
 	}
 	
 	

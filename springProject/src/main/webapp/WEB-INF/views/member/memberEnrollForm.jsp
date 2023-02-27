@@ -18,10 +18,13 @@
             <h2>회원가입</h2>
             <br>
 
-            <form action="insert.me" method="post">
+            <form action="insert.me" method="post" id="enrollForm">
                 <div class="form-group">
                     <label for="userId">* ID :</label>
-                    <input type="text" class="form-control" id="userId" name="userId" placeholder="Please Enter ID" required><br>
+                    <input type="text" class="form-control" id="userId" name="userId" placeholder="Please Enter ID" required>
+                    <div id="checkResult" style="font-size:0.8em; display:none"></div>
+                    <br>
+                    
                     
                     <label for="userPwd">* Password :</label>
                     <input type="password" class="form-control" id="userPwd" name="userPwd" placeholder="Please Enter Password" required><br>
@@ -53,13 +56,50 @@
                 </div>
                 <br>
                 <div class="btns" align="center">
-                    <button type="submit" class="btn btn-primary">회원가입</button>
+                    <button type="submit" class="btn btn-primary" disabled>회원가입</button>
                     <button type="reset" class="btn btn-danger"> 초기화</button>
                 </div>
             </form>
         </div>
         <br><br>
     </div>
+    <script>
+    	$(function(){
+    		//아이디 입력받는 input요소객체 변수에 담아두기(자주접근할것)
+    		const $idInput = $("#enrollForm input[name=userId]");
+    		
+    		$idInput.keyup(function(){
+    			//최소 5글자 이상으로 입력되어있을때만 ajax요청해서 중복체크
+    			if($idInput.val().length >= 5) {
+    				$.ajax({
+    					url:"idCheck.me",
+    					data:{
+    						checkId:$idInput.val()
+    					},success: function(result){
+    						console.log($idInput.val());
+    						if(result=="NNNNN"){ //사용불가
+    							$('#checkResult').show();
+    							$('#checkResult').css("color","red").text("중복된 아이디입니다.");
+    							$('#enrollForm :submit').attr("disabled", true);
+    						}else if(result="NNNNY"){ //사용가능
+    							$('#checkResult').show();
+    							$('#checkResult').css("color","green").text("멋진 아이디네요!");
+    							$('#enrollForm :submit').removeAttr("disabled");
+    						}
+    					},error: function(){
+    						console.log('id중복체크용 ajax통신실패');
+    					}
+    					
+    				});
+    			}else { //5글자 미만 => 버튼 비활성화, 메세지 숨기기 
+					$('#checkResult').hide();
+    				$('#enrollForm :submit').attr("disabled", true);
+    			}
+
+    		})
+    		
+    	})
+    </script>
 
     <!-- 이쪽에 푸터바 포함할꺼임 -->
     <jsp:include page="../common/footer.jsp"/>

@@ -91,6 +91,19 @@
 		   set user_pwd = #{userPwd}
 		 where user_id = #{userId}  
 	</update>
+	<select id="checkId" resultType="_int">
+		select
+		       count(*)
+		  from member
+		 where user_id = #{checkId}      
+	</select>
+	<update id="updateProfileImg">
+		update
+		       member
+		   set profile_url = #{profileImg}
+		     , modify_date = sysdate
+		 where user_id = #{userId}      
+	</update>
 	
 	
 
