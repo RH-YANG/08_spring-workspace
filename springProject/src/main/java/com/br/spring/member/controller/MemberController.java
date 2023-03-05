@@ -333,75 +333,48 @@ public class MemberController {
 			session.setAttribute("alertMsg", "비밀번호를 잘못 입력하셨습니다. 확인해주세요.");
 			return "redirect:myPage.me";
 		}
-	}
-	
-	
-	@RequestMapping("updatePwd.me")
-	public String updatePwd(Member m, String updatePwd, HttpSession session, Model model) {
-		//1_1) 사용자가 입력한 현재 비밀번호가 로그인한 회원의 비밀번호와 일치할 경우
-		String originPwd = ((Member)session.getAttribute("loginUser")).getUserPwd();
-		if( bcryptPasswordEncoder.matches(m.getUserPwd(), originPwd)) {
-			//비밀번호 변경용 서비스 실행
-			updatePwd = bcryptPasswordEncoder.encode(updatePwd);
-			m.setUserPwd(updatePwd);
-			int result = mService.updatePwd(m);
-            
-			if(result > 0) {//> 변경 성공 시
-				//갱신된 회원 객체 조회해서 session에 덮어씌우기
-				Member updateMem = mService.loginMember(m);
-				session.setAttribute("loginUser", updateMem);
-				
-				//마이페이지가 보여질 수 있도록 처리 (이때 alert로 성공 알림)
-				session.setAttribute("alertMsg", "성공적으로 비밀번호를 변경하였습니다.");
-		    	return "redirect:myPage.me";
-			}else {//> 변경 실패 시
-				//마이페이지가 보여질 수 있도록 처리 (이때 alert로 실패 알림)
-				session.setAttribute("alertMsg", "비밀번호 변경에 실패하였습니다.");
-		    	return "redirect:myPage.me";
-			}
-	    }else {//1_2) 사용자가 입력한 현재 비밀번호가 로그인한 회원의 비밀번호와 일치하지 않을 경우
-	    	//> 마이페이지가 보여질 수 있도록 처리 (이때 alert로 비번 틀림 알림)
-	    	session.setAttribute("alertMsg", "입력한 비밀번호가 회원 비밀번호와 일치하지 않습니다.");
-	    	return "redirect:myPage.me";
-	    }
+		
+		
 	}
 	
 	@ResponseBody
 	@RequestMapping("idCheck.me")
-	public String ajaxIdCheck(String checkId){
+	public String ajaxIdCheck(String checkId) {
 		int count = mService.idCheck(checkId);
-		System.out.println(count);
-		return count>0 ? "NNNNN" : "NNNNY";
+		
+		/*
+		if(count > 0) { // 이미 존재하는 아이디 == 사용불가능(NNNNN)
+			return "NNNNN";
+		}else { // 사용가능(NNNNY)
+			return "NNNNY";
+		}
+		*/
+		return count > 0 ? "NNNNN" : "NNNNY";
 	}
 	
-	@ResponseBody
+	@ResponseBody // 응답데이터를 돌려주지 않아도 붙여야됨
 	@RequestMapping("uploadProfile.me")
 	public void uploadProfileImg(MultipartFile uploadFile, Member m, 
-			                     String originalFile, HttpSession session){
+								 String originalFile, HttpSession session) {
+		
+		//System.out.println(uploadFile);
 		if(uploadFile != null) {
-			//만들어둔 static메소드 활용해 파일업로드
-			String saveFilePath = FileUpload.saveFile(uploadFile, session, "resources/profile_images/"); 
-			//데이터담아 조회 보내기
+			String saveFilePath = FileUpload.saveFile(uploadFile, session, "resources/profile_images/");
 			m.setProfileImg(saveFilePath);
+			
 			int result = mService.updateProfileImg(m);
 			
-			if(result>0) {
+			if(result > 0) {
 				if(!originalFile.equals("")) {
-					//기존파일이 있는경우 파일삭제도 진행해주어야한다.
 					new File(session.getServletContext().getRealPath(originalFile)).delete();
 				}
-				//업데이트된 로그인정보 담기
+				
 				session.setAttribute("loginUser", mService.loginMember(m));
 			}
 			
 		}
+		
 	}
-	
-	
-	
-	
-	
-	
 	
 	
 

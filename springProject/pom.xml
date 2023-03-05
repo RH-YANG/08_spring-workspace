@@ -189,8 +189,8 @@
 		    <artifactId>spring-security-config</artifactId>
 		    <version>5.7.2</version>
 		</dependency>
-		
-		<!-- 3.파일업로드 관련된 라이브러리 -->
+				
+		<!-- 3. 파일업로드 관련된 라이브러리 -->		
 		<dependency>
 		    <groupId>commons-fileupload</groupId>
 		    <artifactId>commons-fileupload</artifactId>
@@ -201,16 +201,35 @@
 		    <artifactId>commons-io</artifactId>
 		    <version>2.6</version>
 		</dependency>
-		
-		<!-- 4.JSON관련 라이브러리 -->
+				
+		<!-- 4. json관련한 라이브러리 -->
 		<dependency>
 		    <groupId>com.googlecode.json-simple</groupId>
 		    <artifactId>json-simple</artifactId>
 		    <version>1.1.1</version>
 		</dependency>
-				
-				
+		<dependency>
+		    <groupId>com.google.code.gson</groupId>
+		    <artifactId>gson</artifactId>
+		    <version>2.8.5</version>
+		</dependency>
 		
+		<!-- [추가]웹소켓과 관련된 라이브러리 -->		
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-websocket</artifactId>
+		    <version>${org.springframework-version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>com.fasterxml.jackson.core</groupId>
+		    <artifactId>jackson-databind</artifactId>
+		    <version>2.10.0</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.codehaus.jackson</groupId>
+		    <artifactId>jackson-mapper-asl</artifactId>
+		    <version>1.9.13</version>
+		</dependency>	
 				
 		    
 	</dependencies>

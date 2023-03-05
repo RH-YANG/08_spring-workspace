@@ -24,12 +24,8 @@ public class MemberDao {
 		return sqlSession.update("memberMapper.deleteMember", userId);
 	}
 	
-	public int updatePwd(SqlSessionTemplate sqlSession, Member m) {
-		return sqlSession.update("memberMapper.updatePwd", m);
-	}
-	
 	public int idCheck(SqlSessionTemplate sqlSession, String checkId) {
-		return sqlSession.selectOne("memberMapper.checkId", checkId);
+		return sqlSession.selectOne("memberMapper.idCheck", checkId);
 	}
 	
 	public int updateProfileImg(SqlSessionTemplate sqlSession, Member m) {

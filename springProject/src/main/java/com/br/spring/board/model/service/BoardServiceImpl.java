@@ -10,16 +10,15 @@ import com.br.spring.board.model.dao.BoardDao;
 import com.br.spring.board.model.vo.Board;
 import com.br.spring.board.model.vo.Reply;
 import com.br.spring.common.model.vo.PageInfo;
-import com.br.spring.member.model.vo.Member;
 
 @Service
 public class BoardServiceImpl implements BoardService {
 	
 	@Autowired
 	private SqlSessionTemplate sqlSession;
+	
 	@Autowired
 	private BoardDao bDao;
-	
 
 	@Override
 	public int selectListCount() {
@@ -31,15 +30,14 @@ public class BoardServiceImpl implements BoardService {
 		return bDao.selectList(sqlSession, pi);
 	}
 
-	
 	@Override
 	public int insertBoard(Board b) {
 		return bDao.insertBoard(sqlSession, b);
 	}
 
 	@Override
-	public int increseCount(int boardNo) {
-		return bDao.increseCount(sqlSession, boardNo);
+	public int increaseCount(int boardNo) {
+		return bDao.increaseCount(sqlSession, boardNo);
 	}
 
 	@Override
@@ -59,18 +57,22 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public ArrayList<Reply> selectReplyList(int boardNo) {
-		// TODO Auto-generated method stub
-		return null;
+		return bDao.selectReplyList(sqlSession, boardNo);
 	}
 
 	@Override
 	public int insertReply(Reply r) {
-		// TODO Auto-generated method stub
-		return 0;
+		return bDao.insertReply(sqlSession, r);
 	}
 
+	@Override
+	public ArrayList<Board> selectTopList() {
+		return bDao.selectTopList(sqlSession);
+	}
 
-
-
+	@Override
+	public int completeDeleteReply() {
+		return bDao.completeDeleteReply(sqlSession);
+	}
 
 }

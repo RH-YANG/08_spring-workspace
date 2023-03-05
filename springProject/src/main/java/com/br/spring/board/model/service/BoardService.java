@@ -5,30 +5,35 @@ import java.util.ArrayList;
 import com.br.spring.board.model.vo.Board;
 import com.br.spring.board.model.vo.Reply;
 import com.br.spring.common.model.vo.PageInfo;
-import com.br.spring.member.model.vo.Member;
 
 public interface BoardService {
-
+	
+	// 1. 게시판 리스트 조회 서비스 (페이징)
 	int selectListCount();
 	ArrayList<Board> selectList(PageInfo pi);
 	
+	// 2. 게시글 작성하기 서비스
+	int insertBoard(Board b);	
 	
-	int insertBoard(Board b);
-	
-	//3. 게시글 상세조회용 서비스
-	int increseCount(int boardNo);
+	// 3. 게시글 상세조회용 서비스
+	int increaseCount(int boardNo);
 	Board selectBoard(int boardNo);
 	
-	//4. 게시글 삭제용 서비스
+	// 4. 게시글 삭제용 서비스
 	int deleteBoard(int boardNo);
 	
-	int updateBoard(Board b);
-
-	//6. 댓글 조회용 서비스
+	// 5. 게시글 수정용 서비스
+	int updateBoard(Board b);	
+	
+	// 6. 댓글 리스트 조회용 서비스 (ajax)
 	ArrayList<Reply> selectReplyList(int boardNo);
 	
-	//7. 댓글 작성용 서비스
+	// 7. 댓글 작성용 서비스 (ajax)
 	int insertReply(Reply r);
 	
+	// [추가] 게시글 top5 조회용 서비스 (ajax)
+	ArrayList<Board> selectTopList();
 	
+	// [추가] 댓글 영구삭제용 서비스 (스케줄링)
+	int completeDeleteReply();
 }

@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
 <mapper namespace="boardMapper">
+
 	<resultMap id="boardResult" type="Board">
 		<id column="board_no" property="boardNo" />
 		<result column="board_title" property="boardTitle" />
 		<result column="board_writer" property="boardWriter" />
-		<result column="board_content" property="boardContent" />
 		<result column="count" property="count" />
 		<result column="create_date" property="createDate" />
 		<result column="origin_name" property="originName" />
 		<result column="change_name" property="changeName" />
+		<result column="board_content" property="boardContent" />
 	</resultMap>
 	
+	<resultMap id="replyResult" type="Reply">
+		<id column="reply_no" property="replyNo"/>
+		<result column="reply_writer" property="replyWriter"/>
+		<result column="reply_content" property="replyContent"/>
+		<result column="create_date" property="createDate"/>
+	</resultMap>
 
 	<select id="selectListCount" resultType="_int">
-		select 
+		select
 		       count(*)
 		  from board
-		 where status='Y'	
+		 where status = 'Y'
 	</select>
 	
 	<select id="selectList" resultMap="boardResult">
@@ -26,10 +33,10 @@
 		     , board_title
 		     , board_writer
 		     , count
-		     , to_char(create_date, 'YYYY-MM-DD') "create_date"
+		     , to_char(create_date, 'YYYY-MM-DD') as "create_date"
 		     , origin_name
-		  from board      
-		 where status='Y' 
+		  from board
+		 where status = 'Y'
 		 order
 		    by board_no desc
 	</select>
@@ -41,7 +48,7 @@
 		    board_no
 		  , board_title
 		  , board_writer
-		  , board_content 
+		  , board_content
 		  , origin_name
 		  , change_name
 		  )
@@ -56,40 +63,98 @@
 		  )
 	</insert>
 	
-	<update id="increseCount">
-		update board
-		   set count = count+1
-		 where board_no = #{boardNo}  
+	<update id="increaseCount">
+		update
+		       board
+		   set count = count + 1
+		 where board_no = #{boardNo}
+		   and status = 'Y'
 	</update>
 	
 	<select id="selectBoard" resultMap="boardResult">
 		select
-		       board_no
-		     , board_title
-		     , board_content
-		     , board_writer
-		     , count
-		     , to_char(create_date, 'YYYY-MM-DD') "create_date"
-		     , origin_name
-		     , change_name
-		  from board      
-		 where board_no = #{boardNo} 	
+			   board_no
+			 , board_title
+			 , board_writer
+			 , board_content
+			 , to_char(create_date, 'YYYY-MM-DD') as "create_date"
+			 , origin_name
+			 , change_name
+		  from board
+		 where board_no = #{boardNo}
 	</select>
+	
 	<update id="deleteBoard">
 		update
 		       board
 		   set status = 'N'
-		 where board_no = #{boardNo}     
+		 where board_no = #{boardNo}
 	</update>
+	
 	<update id="updateBoard">
 		update
 		       board
 		   set board_title = #{boardTitle}
 		     , board_content = #{boardContent}
 		     , origin_name = #{originName}
-		     , change_name = #{changeName}    
-		 where board_no = #{boardNo}   
+		     , change_name = #{changeName}
+		 where board_no = #{boardNo}     
 	</update>
+	
+	<select id="selectReplyList" resultMap="replyResult">
+		select
+		       reply_no
+		     , reply_writer
+		     , reply_content
+		     , to_char(create_date, 'YYYY-MM-DD') as "create_date"
+		  from reply
+		 where status = 'Y'
+		   and ref_bno = #{boardNo}
+		 order
+		    by reply_no desc
+	</select>
+	
+	<insert id="insertReply">
+		insert
+		  into reply
+		  (
+		    reply_no
+		  , reply_content
+		  , ref_bno
+		  , reply_writer
+		  )
+		  values
+		  (
+		    seq_rno.nextval
+		  , #{replyContent}
+		  , #{refBoardNo}
+		  , #{replyWriter}
+		  )
+	</insert>
+	
+	<select id="selectTopList" resultMap="boardResult">
+		select *
+		  from (
+		        select
+		               board_no
+		             , board_title
+		             , board_writer
+		             , count
+		             , to_char(create_date, 'YYYY-MM-DD') as "create_date"
+		             , origin_name
+		          from board
+		         where status = 'Y'
+		         order
+		            by count desc
+		      )
+		 where rownum between 1 and 5
+	</select>
+	
+	<delete id="completeDeleteReply">
+		delete
+		  from reply
+		 where status = 'N'
+	</delete>
 
 
 </mapper>

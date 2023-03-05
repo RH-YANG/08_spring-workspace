@@ -63,42 +63,52 @@
         </div>
         <br><br>
     </div>
+    
     <script>
     	$(function(){
-    		//아이디 입력받는 input요소객체 변수에 담아두기(자주접근할것)
+    		
+    		// 아이디 입력받는 input 요소객체 변수에 담아두기
     		const $idInput = $("#enrollForm input[name=userId]");
     		
     		$idInput.keyup(function(){
-    			//최소 5글자 이상으로 입력되어있을때만 ajax요청해서 중복체크
-    			if($idInput.val().length >= 5) {
+    			//console.log($idInput.val());
+    			
+    			// 우선 최소 5글자 이상으로 입력되어있을때만 ajax요청해서 중복체크 하도록
+    			if($idInput.val().length >= 5){
+    				
     				$.ajax({
     					url:"idCheck.me",
-    					data:{
-    						checkId:$idInput.val()
-    					},success: function(result){
-    						console.log($idInput.val());
-    						if(result=="NNNNN"){ //사용불가
-    							$('#checkResult').show();
-    							$('#checkResult').css("color","red").text("중복된 아이디입니다.");
-    							$('#enrollForm :submit').attr("disabled", true);
-    						}else if(result="NNNNY"){ //사용가능
-    							$('#checkResult').show();
-    							$('#checkResult').css("color","green").text("멋진 아이디네요!");
-    							$('#enrollForm :submit').removeAttr("disabled");
+    					data:{checkId:$idInput.val()},
+    					success:function(result){
+    						
+    						if(result == "NNNNN"){ // 사용불가능
+    							// => 빨간색 메세지 출력
+    							$("#checkResult").show();
+    							$("#checkResult").css("color", "red").text("중복된 아이디가 존재합니다. 다시 입력해주세요.");
+    							// => 버튼 비활성
+    							$("#enrollForm :submit").attr("disabled", true);
+    						}else if(result == "NNNNY"){ // 사용가능
+    							// => 초록색 메세지 출력
+    							$("#checkResult").show();
+    							$("#checkResult").css("color", "green").text("멋진 아이디네요!");    							
+    							// => 버튼 활성화
+    							$("#enrollForm :submit").removeAttr("disabled");
     						}
-    					},error: function(){
-    						console.log('id중복체크용 ajax통신실패');
+    						
+    					},error:function(){
+    						console.log("아이디 중복체크용 ajax 통신실패");
     					}
-    					
     				});
-    			}else { //5글자 미만 => 버튼 비활성화, 메세지 숨기기 
-					$('#checkResult').hide();
-    				$('#enrollForm :submit').attr("disabled", true);
+    				
+    			}else{ // 5글자 미만일 경우 => 버튼 비활성화, 메세지 숨기기
+    				$("#checkResult").hide();
+    				$("#enrollForm :submit").attr("disabled", true);
     			}
-
+    			
     		})
-    		
+    	
     	})
+    	
     </script>
 
     <!-- 이쪽에 푸터바 포함할꺼임 -->
