@@ -10,6 +10,7 @@
 		<typeAlias type="com.br.spring.member.model.vo.Member" alias="Member" />
 		<typeAlias type="com.br.spring.board.model.vo.Board" alias="Board" />
 		<typeAlias type="com.br.spring.board.model.vo.Reply" alias="Reply" />
+		<typeAlias type="com.br.spring.notice.model.vo.Notice" alias="Notice" />
 	</typeAliases>
 	<!-- 유의사항 : 미리등록해두려면 해당 클래스가 진짜 존재해야됨 -->
 	
@@ -18,6 +19,7 @@
 	<mappers>
 		<mapper resource="/mappers/member-mapper.xml"/>
 		<mapper resource="/mappers/board-mapper.xml"/>
+		<mapper resource="/mappers/notice-mapper.xml"/>
 	</mappers>
 	<!-- 유의사항 : 미리등록해두려면 해당 mapper파일이 진짜 존재해야됨, namespace도 지정되어있어야됨 -->
 	

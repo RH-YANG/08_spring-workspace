@@ -108,7 +108,7 @@
         <div id="header_2">
             <ul>
                 <li><a href="">HOME</a></li>
-                <li><a href="">공지사항</a></li>
+                <li><a href="list.no">공지사항</a></li>
                 <li><a href="list.bo">자유게시판</a></li>
                 <li><a href="">사진게시판</a></li>
             </ul>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd" >
+<mapper namespace="noticeMapper">
+
+	<resultMap id="noticeResult" type="Notice">
+		<id column="notice_no" property="noticeNo" />
+		<result column="notice_title" property="noticeTitle" />
+		<result column="notice_writer" property="noticeWriter" />
+		<result column="create_date" property="createDate" />
+		<result column="notice_content" property="noticeContent" />
+	</resultMap>
+
+	<select id="selectListCount" resultType="_int">
+		select
+		       count(*)
+		  from notice
+	</select>
+	
+	<select id="selectList" resultMap="noticeResult">
+		select
+		       notice_no
+		     , notice_title
+		     , notice_writer
+		     , to_char(create_date, 'YY/MM/DD') as "create_date"
+		  from notice
+		 order
+		    by notice_no desc
+	</select>
+	<insert id="insertNotice">
+		insert
+		  into notice
+		  (
+		    notice_no
+		  , notice_title
+		  , notice_writer
+		  , notice_content
+		  )
+		  values
+		  (
+		    seq_nno.nextval
+		  , #{noticeTitle}
+		  , #{noticeWriter}
+		  , #{noticeContent}
+		  )
+	</insert>
+	<select id="selectNotice" resultMap="noticeResult">
+		select
+			   notice_no
+			 , notice_title
+			 , notice_writer
+			 , notice_content
+			 , to_char(create_date, 'YYYY"년" MM"월" DD"일"') as "create_date"
+		  from notice
+		 where notice_no = #{noticeNo}
+	</select>
+	<update id="deleteNotice">
+		delete
+		  from notice
+		 where notice_no = #{noticeNo}
+	</update>
+
+</mapper>
