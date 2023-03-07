@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.reflection.SystemMetaObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -80,7 +81,7 @@ public class BoardController {
 							HttpSession session, Model model) {
 		
 		//System.out.println(b);
-		//System.out.println(upfile); // 첨부파일 선택했든 안했든 생성된 객체 (단, filename에 원본명이 있냐, ""이냐)
+		System.out.println(upfile); // 첨부파일 선택했든 안했든 생성된 객체 (단, filename에 원본명이 있냐, ""이냐)
 		
 		// 전달된 파일이 있을 경우 => 파일명 수정작업 후 서버 업로드 => 원본명, 서버업로드된경로를 b에 이어서 담기
 		if(!upfile.getOriginalFilename().equals("")) {
@@ -106,9 +107,11 @@ public class BoardController {
 			*/
 			String saveFilePath = FileUpload.saveFile(upfile, session, "resources/uploadFiles/");
 			
+
+			
+			
 			// 원본명, 서버업로드된경로(resources/xxxxxx/xxxxx.jpg)를 b에 이어서 담기
-			b.setOriginName(upfile.getOriginalFilename());
-			b.setChangeName(saveFilePath);
+
 		}
 		
 		// 넘어온 첨부파일 있을 경우 b : 제목, 작성자, 내용, 파일원본명, 파일저장경로

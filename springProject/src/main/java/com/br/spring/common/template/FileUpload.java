@@ -22,7 +22,6 @@ public class FileUpload {
 		
 		// 업로드 시키고자 하는 폴더의 물리적인 경로 알아내기 
 		String savePath = session.getServletContext().getRealPath(folderPath);
-		
 		try {
 			upfile.transferTo(new File(savePath + changeName));
 		} catch (IllegalStateException | IOException e) {
